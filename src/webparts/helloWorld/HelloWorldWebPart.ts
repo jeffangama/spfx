@@ -1,7 +1,9 @@
 // XuLhcUJ2/+gFOBljCc0m2vLqi55/JohvPJ3oZkLgkKBtV+cZjRpkBWv9VpOrT5BoLXWSPxP8mBKcbjTwGUcwyw==
 // gulp package-solution --ship
 // http://spfsamplesjeff.azureedge.net/
-import { Version } from '@microsoft/sp-core-library';
+import {
+  Version
+} from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -10,11 +12,15 @@ import {
   PropertyPaneDropdown,
   PropertyPaneToggle
 } from '@microsoft/sp-webpart-base';
-import { escape } from '@microsoft/sp-lodash-subset';
+import {
+  escape
+} from '@microsoft/sp-lodash-subset';
 
 import styles from './HelloWorld.module.scss';
 import * as strings from 'helloWorldStrings';
-import { IHelloWorldWebPartProps } from './IHelloWorldWebPartProps';
+import {
+  IHelloWorldWebPartProps
+} from './IHelloWorldWebPartProps';
 import MockHttpClient from './MockHttpClient';
 
 export interface IUsersProfiles {
@@ -36,7 +42,7 @@ import {
   EnvironmentType
 } from '@microsoft/sp-core-library';
 
-export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
+export default class HelloWorldWebPart extends BaseClientSideWebPart < IHelloWorldWebPartProps > {
 
   public render(): void {
     var boolTitle = "default";
@@ -63,26 +69,27 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     this._renderListAsync();
   }
 
-  private _getMockListData(): Promise<IUsersProfiles> {
+  private _getMockListData(): Promise < IUsersProfiles > {
     return MockHttpClient.get()
       .then((data: IUserProfile[]) => {
-        var listData: IUsersProfiles = { value: data };
+        var listData: IUsersProfiles = {
+          value: data
+        };
         return listData;
-      }) as Promise<IUsersProfiles>;
+      }) as Promise < IUsersProfiles > ;
   }
 
-  private _getUserProfiles(): Promise<any> {
+  private _getUserProfiles(): Promise < any > {
     let url = this.context.pageContext.web.absoluteUrl + `/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true`;
 
     return this.context.spHttpClient.get(url,
-      SPHttpClient.configurations.v1,
-      {
+      SPHttpClient.configurations.v1, {
         headers: {
           'Accept': 'application/json;odata=verbose'
         }
       }).then((response: SPHttpClientResponse) => {
-        return response.json();
-      });
+      return response.json();
+    });
   }
 
   private _renderListAsync(): void {
@@ -91,8 +98,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       this._getMockListData().then((response) => {
         this._renderUserProfiles(response.value);
       });
-    }
-    else if (Environment.type == EnvironmentType.SharePoint ||
+    } else if (Environment.type == EnvironmentType.SharePoint ||
       Environment.type == EnvironmentType.ClassicSharePoint) {
 
       this._getUserProfiles()
@@ -127,44 +133,51 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
-      pages: [
-        {
-          header: {
-            description: strings.PropertyPaneDescription
-          },
-          groups: [
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('description', {
-                  label: 'Description'
-                }),
-                PropertyPaneTextField('test', {
-                  label: 'Multi-line Text Field',
-                  multiline: true
-                }),
-                PropertyPaneCheckbox('test1', {
-                  text: 'Checkbox'
-                }),
-                PropertyPaneDropdown('test2', {
-                  label: 'Dropdown',
-                  options: [
-                    { key: '1', text: 'One' },
-                    { key: '2', text: 'Two' },
-                    { key: '3', text: 'Three' },
-                    { key: '4', text: 'Four' }
-                  ]
-                }),
-                PropertyPaneToggle('test3', {
-                  label: 'Toggle',
-                  onText: 'On',
-                  offText: 'Off'
-                })
+      pages: [{
+        header: {
+          description: strings.PropertyPaneDescription
+        },
+        groups: [{
+          groupName: strings.BasicGroupName,
+          groupFields: [
+            PropertyPaneTextField('description', {
+              label: 'Description'
+            }),
+            PropertyPaneTextField('test', {
+              label: 'Multi-line Text Field',
+              multiline: true
+            }),
+            PropertyPaneCheckbox('test1', {
+              text: 'Checkbox'
+            }),
+            PropertyPaneDropdown('test2', {
+              label: 'Dropdown',
+              options: [{
+                  key: '1',
+                  text: 'One'
+                },
+                {
+                  key: '2',
+                  text: 'Two'
+                },
+                {
+                  key: '3',
+                  text: 'Three'
+                },
+                {
+                  key: '4',
+                  text: 'Four'
+                }
               ]
-            }
+            }),
+            PropertyPaneToggle('test3', {
+              label: 'Toggle',
+              onText: 'On',
+              offText: 'Off'
+            })
           ]
-        }
-      ]
+        }]
+      }]
     };
   }
 
