@@ -1,0 +1,19 @@
+http://siteurl/_api/SP.UserProfiles.PeopleManager/GetPropertiesFor(accountName=@v)?@v='i:0%23.f|membership|vardhaman@siteurl.onmicrosoft.com'
+
+/_vti_bin/ListData.svc/UserInformationList
+
+https://wphsg.sharepoint.com/sites/Developpersite/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true
+
+url: http://site url/_vti_bin/listdata.svc/ListName,
+method: GET
+Headers:
+    accept: "application/json;odata=verbose"
+
+/_api/SP.UserProfiles.PeopleManager/GetPropertiesFor(accountName=@v)?@v='i:0%23.f|membership|xx@siteurl.onmicrosoft.com'
+
+
+Test query in postman :
+    pre requisite : https://www.helloitsliam.com/2016/02/04/postman-and-office-365/
+    Paste the url : https://wphsg.sharepoint.com/sites/Developpersite/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true
+    Add header  : 
+        accept   ,   application/json;odata=verbose

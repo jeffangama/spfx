@@ -21,14 +21,24 @@ export interface ISPLists {
   value: ISPList[];
 }
 
+export interface IUsersProfiles {
+  value: IUserProfile[];
+}
+
 export interface ISPList {
   Title: string;
   Id: string;
 }
 
+export interface IUserProfile {
+  a: string;
+  b: string
+}
+
 import {
   SPHttpClient,
-  SPHttpClientResponse
+  SPHttpClientResponse,
+  ISPHttpClientOptions
 } from '@microsoft/sp-http';
 
 import {
@@ -39,33 +49,16 @@ import {
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
   public render(): void {
-    // this.domElement.innerHTML = `
-    //   <div class="${styles.helloWorld}">
-    //     <div class="${styles.container}">
-    //       <div class="ms-Grid-row ms-bgColor-themeDark ms-fontColor-white ${styles.row}">
-    //         <div class="ms-Grid-col ms-u-lg10 ms-u-xl8 ms-u-xlPush2 ms-u-lgPush1">
-    //           <span class="ms-font-xl ms-fontColor-white">Welcome to SharePoint!</span>
-    //           <p class="ms-font-l ms-fontColor-white">Customize SharePoint experiences using Web Paaarts.</p>
-    //           <p class="ms-font-l ms-fontColor-white">${escape(this.properties.description)}</p>
-    //           <p class="ms-font-l ms-fontColor-white">${escape(this.properties.test2)}</p>
-    //           <p class="ms-font-l ms-fontColor-white">Loading from ${escape(this.context.pageContext.web.title)}</p>
-    //           <a href="https://aka.ms/spfx" class="${styles.button}">
-    //             <span class="${styles.label}">Learn more</span>
-    //           </a>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div class="${styles.row}">`;
 
     //do not work
     var boolTitle = "default";
-    if (this.context.pageContext.web.title.indexOf("Local") > 0) {
-      boolTitle = "yes title is there";
-      console.log("HAHAHAHAHHAHA"+ this.context.pageContext.web.title);
-    }else {
-      // alert("no man, no Local in " + this.context.pageContext.web.title.toString());
-    }
+    // alert("testwww");
+    // if (this.context.pageContext.web.title.indexOf("Local") > 0) {
+    //   boolTitle = "yes title is there";
+    //   console.log("HAHAHAHAHHAHA"+ this.context.pageContext.web.title);
+    // }else {
+    //   // alert("no man, no Local in " + this.context.pageContext.web.title.toString());
+    // }
 
     this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
@@ -97,11 +90,23 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       }) as Promise<ISPLists>;
   }
 
-  private _getListData(): Promise<ISPLists> {
-    return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + `/_api/web/lists?$filter=Hidden eq false`, SPHttpClient.configurations.v1)
-      .then((response: SPHttpClientResponse) => {
+  private _getUserProfiles(): Promise<IUsersProfiles> {
+    let url: string = this.context.pageContext.web.absoluteUrl + `/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true`;
+
+    return this.context.spHttpClient.get(url,
+      SPHttpClient.configurations.v1,
+      {
+        headers: {
+          'Accept': 'application/json;odata=verbose'
+        }
+      }).then((response: SPHttpClientResponse) => {
         return response.json();
       });
+
+    // return this.context.spHttpClient.post(url,
+    // SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
+    //   return response.json();
+    // });
   }
 
   private _renderListAsync(): void {
@@ -113,11 +118,37 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     }
     else if (Environment.type == EnvironmentType.SharePoint ||
       Environment.type == EnvironmentType.ClassicSharePoint) {
-      this._getListData()
+      // this._getListData()
+      //   .then((response) => {
+      //     this._renderList(response.value);
+      //   });
+      //let resultcall: any = this._getUserProfiles();
+
+      this._getUserProfiles()
         .then((response) => {
-          this._renderList(response.value);
+          this._renderUserProfiles(response);
         });
     }
+  }
+
+  private _renderUserProfiles(items: any) { //items: IUserProfile[]) {
+    let html: string = '';
+    //html = items;
+    for (var i = 0; i < items.d.results.length; i++) {
+      console.log(items.d.results);
+
+      if (items.d.results[i]['FirstName'] != null) {
+        html += `
+        <ul class="${styles.list}">
+            <li class="${styles.listItem}">
+                <span class="ms-font-l"> ` + items.d.results[i]['FirstName'] + `</span>
+            </li>
+        </ul>`;
+      }
+    }
+
+    const listContainer: Element = this.domElement.querySelector('#spListContainer');
+    listContainer.innerHTML = html;
   }
 
   private _renderList(items: ISPList[]): void {
