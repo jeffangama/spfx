@@ -31,8 +31,9 @@ export interface ISPList {
 }
 
 export interface IUserProfile {
-  a: string;
-  b: string
+  FirstName: string;
+  b: string;
+  d: any;
 }
 
 import {
@@ -90,8 +91,8 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       }) as Promise<ISPLists>;
   }
 
-  private _getUserProfiles(): Promise<IUsersProfiles> {
-    let url: string = this.context.pageContext.web.absoluteUrl + `/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true`;
+  private _getUserProfiles(): Promise<any> {
+    let url = this.context.pageContext.web.absoluteUrl + `/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true`;
 
     return this.context.spHttpClient.get(url,
       SPHttpClient.configurations.v1,
@@ -102,69 +103,42 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       }).then((response: SPHttpClientResponse) => {
         return response.json();
       });
-
-    // return this.context.spHttpClient.post(url,
-    // SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
-    //   return response.json();
-    // });
   }
 
   private _renderListAsync(): void {
     // Local environment
     if (Environment.type === EnvironmentType.Local) {
       this._getMockListData().then((response) => {
-        this._renderList(response.value);
+        //this._renderList(response.value);
       });
     }
     else if (Environment.type == EnvironmentType.SharePoint ||
       Environment.type == EnvironmentType.ClassicSharePoint) {
-      // this._getListData()
-      //   .then((response) => {
-      //     this._renderList(response.value);
-      //   });
-      //let resultcall: any = this._getUserProfiles();
 
       this._getUserProfiles()
         .then((response) => {
-          this._renderUserProfiles(response);
+          this._renderUserProfiles(response.d.results);
         });
     }
   }
 
-  private _renderUserProfiles(items: any) { //items: IUserProfile[]) {
+  private _renderUserProfiles(items: IUserProfile[]) { //items: IUserProfile[]) {
     let html: string = '';
-    //html = items;
-    for (var i = 0; i < items.d.results.length; i++) {
-      console.log(items.d.results);
-
-      if (items.d.results[i]['FirstName'] != null) {
+    items.forEach((item: IUserProfile) => {
+      if (item.FirstName != null) {
         html += `
         <ul class="${styles.list}">
             <li class="${styles.listItem}">
-                <span class="ms-font-l"> ` + items.d.results[i]['FirstName'] + `</span>
+                <span class="ms-font-l">${item.FirstName}</span>
             </li>
         </ul>`;
       }
-    }
-
-    const listContainer: Element = this.domElement.querySelector('#spListContainer');
-    listContainer.innerHTML = html;
-  }
-
-  private _renderList(items: ISPList[]): void {
-    let html: string = '';
-    items.forEach((item: ISPList) => {
-      html += `
-        <ul class="${styles.list}">
-            <li class="${styles.listItem}">
-                <span class="ms-font-l">${item.Title}</span>
-            </li>
-        </ul>`;
     });
 
     const listContainer: Element = this.domElement.querySelector('#spListContainer');
     listContainer.innerHTML = html;
   }
+
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');
