@@ -50,16 +50,7 @@ import {
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
   public render(): void {
-
-    //do not work
     var boolTitle = "default";
-    // alert("testwww");
-    // if (this.context.pageContext.web.title.indexOf("Local") > 0) {
-    //   boolTitle = "yes title is there";
-    //   console.log("HAHAHAHAHHAHA"+ this.context.pageContext.web.title);
-    // }else {
-    //   // alert("no man, no Local in " + this.context.pageContext.web.title.toString());
-    // }
 
     this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
@@ -134,6 +125,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
         </ul>`;
       }
     });
+    //test comment
 
     const listContainer: Element = this.domElement.querySelector('#spListContainer');
     listContainer.innerHTML = html;
