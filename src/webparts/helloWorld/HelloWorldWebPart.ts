@@ -17,23 +17,12 @@ import * as strings from 'helloWorldStrings';
 import { IHelloWorldWebPartProps } from './IHelloWorldWebPartProps';
 import MockHttpClient from './MockHttpClient';
 
-export interface ISPLists {
-  value: ISPList[];
-}
-
 export interface IUsersProfiles {
   value: IUserProfile[];
 }
 
-export interface ISPList {
-  Title: string;
-  Id: string;
-}
-
 export interface IUserProfile {
   FirstName: string;
-  b: string;
-  d: any;
 }
 
 import {
@@ -74,12 +63,12 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     this._renderListAsync();
   }
 
-  private _getMockListData(): Promise<ISPLists> {
+  private _getMockListData(): Promise<IUsersProfiles> {
     return MockHttpClient.get()
-      .then((data: ISPList[]) => {
-        var listData: ISPLists = { value: data };
+      .then((data: IUserProfile[]) => {
+        var listData: IUsersProfiles = { value: data };
         return listData;
-      }) as Promise<ISPLists>;
+      }) as Promise<IUsersProfiles>;
   }
 
   private _getUserProfiles(): Promise<any> {
@@ -100,7 +89,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     // Local environment
     if (Environment.type === EnvironmentType.Local) {
       this._getMockListData().then((response) => {
-        //this._renderList(response.value);
+        this._renderUserProfiles(response.value);
       });
     }
     else if (Environment.type == EnvironmentType.SharePoint ||

@@ -1,13 +1,13 @@
-import { ISPList } from './HelloWorldWebPart';
+import { IUserProfile } from './HelloWorldWebPart';
 
 export default class MockHttpClient  {
 
-    private static _items: ISPList[] = [{ Title: 'Mock List', Id: '1' },
-                                        { Title: 'Mock List 2', Id: '2' },
-                                        { Title: 'Mock List 3', Id: '3' }];
+    private static _items: IUserProfile[] = [{ FirstName: 'Mock List' },
+                                        { FirstName: 'Mock List 2' },
+                                        { FirstName: 'Mock List 3' }];
     
-    public static get(): Promise<ISPList[]> {
-    return new Promise<ISPList[]>((resolve) => {
+    public static get(): Promise<IUserProfile[]> {
+    return new Promise<IUserProfile[]>((resolve) => {
             resolve(MockHttpClient._items);
         });
     }
