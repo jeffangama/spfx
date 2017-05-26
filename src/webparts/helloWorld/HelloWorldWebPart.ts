@@ -1,7 +1,7 @@
 // XuLhcUJ2/+gFOBljCc0m2vLqi55/JohvPJ3oZkLgkKBtV+cZjRpkBWv9VpOrT5BoLXWSPxP8mBKcbjTwGUcwyw==
 // gulp package-solution --ship
 // http://spfsamplesjeff.azureedge.net/
-import { Version } from '@microsoft/sp-core-library';
+import { Version, DisplayMode, Environment, EnvironmentType, Log } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -31,22 +31,32 @@ import {
   ISPHttpClientOptions
 } from '@microsoft/sp-http';
 
-import {
-  Environment,
-  EnvironmentType
-} from '@microsoft/sp-core-library';
+import * as React from 'react';
+import * as ReactDom from 'react-dom';
+import HelloWorldReact from './components/HelloWorldReact';
+import { IHelloWorldReactProps } from './IHelloWorldWebPartProps';
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
   public render(): void {
 
     this.context.statusRenderer.displayLoadingIndicator(this.domElement, "message");
+
     setTimeout(() => {
       this.context.statusRenderer.clearLoadingIndicator(this.domElement);
 
-      var boolTitle = "default";
+      this._testRest();
+      this._testReact();
 
-      this.domElement.innerHTML = `
+      this._logTest();
+    }
+      , 2000);
+  }
+
+  private _testRest(): void {
+    var boolTitle = "default";
+
+    this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
         <div class="${styles.container}">
           <div class="ms-Grid-row ms-bgColor-themeDark ms-fontColor-white ${styles.row}">
@@ -65,12 +75,27 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
         <div id="spListContainer" />
       </div>`;
 
-      this._renderListAsync();
-    }
-      , 2000);
-
-
+    this._renderListAsync();
   }
+
+  private _testReact(): void {
+    const element: React.ReactElement<IHelloWorldReactProps> = React.createElement(
+      HelloWorldReact,
+      {
+        description: this.properties.description
+      }
+    );
+
+    ReactDom.render(element, this.domElement);
+  }
+
+  private _logTest(): void {
+    Log.info('HelloWorld', 'message', this.context.serviceScope);
+    Log.warn('HelloWorld', 'WARNING message', this.context.serviceScope);
+    Log.error('HelloWorld', new Error('Error message'), this.context.serviceScope);
+    Log.verbose('HelloWorld', 'VERBOSE message', this.context.serviceScope);
+  }
+
 
   private _getMockListData(): Promise<IUsersProfiles> {
     return MockHttpClient.get()

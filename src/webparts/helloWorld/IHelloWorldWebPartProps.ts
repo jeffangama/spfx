@@ -5,3 +5,7 @@ export interface IHelloWorldWebPartProps {
     test2: string;
     test3: boolean;
 }
+
+export interface IHelloWorldReactProps {
+  description: string;
+} 
