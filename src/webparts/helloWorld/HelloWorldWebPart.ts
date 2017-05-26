@@ -43,10 +43,10 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     this.context.statusRenderer.displayLoadingIndicator(this.domElement, "message");
     setTimeout(() => {
       this.context.statusRenderer.clearLoadingIndicator(this.domElement);
-      
-          var boolTitle = "default";
 
-          this.domElement.innerHTML = `
+      var boolTitle = "default";
+
+      this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
         <div class="${styles.container}">
           <div class="ms-Grid-row ms-bgColor-themeDark ms-fontColor-white ${styles.row}">
@@ -64,8 +64,10 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
         </div>  
         <div id="spListContainer" />
       </div>`;
-      }
-    , 2000);
+
+      this._renderListAsync();
+    }
+      , 2000);
 
 
   }
