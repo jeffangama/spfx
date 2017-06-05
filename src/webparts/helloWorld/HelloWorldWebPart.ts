@@ -52,7 +52,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     setTimeout(() => {
       this.context.statusRenderer.clearLoadingIndicator(this.domElement);
 
-      //this._testRest();
+      this._testRest();
       this._testReact();
 
       this._logTest();

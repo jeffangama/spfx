@@ -14,7 +14,7 @@ export default class MainApp extends React.Component<IHelloWorldReactProps, void
             <div>
                 <HelloWorldReact description="" />
                 <BreadcrumbBasicExample />
-                <ModalBasicExample />
+                {/*<ModalBasicExample />*/}
             </div>
         );
     }

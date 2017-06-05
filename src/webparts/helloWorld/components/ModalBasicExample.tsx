@@ -21,7 +21,6 @@ export class ModalBasicExample extends React.Component<any, any> {
           onClick={ this._showModal.bind(this) }
           text='Open Modal'
         />
-        <button class="ms-Button ms-Button--default" aria-labelledby="9" aria-describedby="10"></button>
         <Modal
           isOpen={ this.state.showModal }
           onDismiss={ this._closeModal.bind(this) }
