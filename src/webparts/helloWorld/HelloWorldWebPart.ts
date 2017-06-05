@@ -35,6 +35,8 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import HelloWorldReact from './components/HelloWorldReact';
 import { IHelloWorldReactProps } from './IHelloWorldWebPartProps';
+import { BreadcrumbBasicExample } from "./components/BreadCrumb";
+import MainApp from "./components/MainApp";
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
@@ -42,10 +44,15 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
 
     this.context.statusRenderer.displayLoadingIndicator(this.domElement, "message");
 
+    this.domElement.innerHTML = `
+      <div id="react1" />
+        <div id="react2" />
+      `;
+
     setTimeout(() => {
       this.context.statusRenderer.clearLoadingIndicator(this.domElement);
 
-      this._testRest();
+      //this._testRest();
       this._testReact();
 
       this._logTest();
@@ -73,20 +80,28 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
           </div>
         </div>  
         <div id="spListContainer" />
+        <div id="react1" />
+        <div id="react2" />
       </div>`;
 
     this._renderListAsync();
   }
 
   private _testReact(): void {
-    const element: React.ReactElement<IHelloWorldReactProps> = React.createElement(
-      HelloWorldReact,
-      {
-        description: this.properties.description
-      }
+    const element: React.ReactElement<any> = React.createElement(
+      MainApp
     );
 
-    ReactDom.render(element, this.domElement);
+    ReactDom.render(element, document.getElementById('react1')); //this.domElement
+
+    // const element2: React.ReactElement<any> = React.createElement(
+    //   BreadcrumbBasicExample,
+    //   {
+    //   }
+    // );
+    
+    //ReactDom.render(element, document.getElementById('react1'));
+
   }
 
   private _logTest(): void {

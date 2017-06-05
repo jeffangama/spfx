@@ -16,7 +16,7 @@ export default class HelloWorldReact extends React.Component<IHelloWorldReactPro
               <p className="ms-font-l ms-fontColor-white">Customize SharePoint experiences using Web Parts.</p>
               <p className="ms-font-l ms-fontColor-white">{escape(this.props.description)}</p>
               <a href="https://aka.ms/spfx" className={styles.button}>
-              <span className={styles.label}>Learn more</span>
+                <span className={styles.label}>Learn more</span>
               </a>
               <p className="ms-u-slideRightIn10">This content will slide in.</p>
               <p className="ms-bgColor-themeDarker ms-fontColor-white">This theme is darker.</p>
