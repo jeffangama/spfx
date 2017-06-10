@@ -47,6 +47,7 @@ export interface ISPLists {
 }
 export interface ISPList {
   Title: string;
+  FileRef: string;
 }
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
@@ -177,11 +178,10 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
   }
 
   private _getHappenings(): Promise<ISPLists> {
-    let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
+    let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items?$top=3&$select=Id,Title,FileRef`;
 
     return this.context.spHttpClient.get(url, SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
-
         return response.json();
       });
   }
@@ -231,7 +231,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
         html += `
       <ul class="${styles.list}">
           <li class="${styles.listItem}">
-              <span class="ms-font-l">${item.Title}</span>
+              <span class="ms-font-l"><a target="_blank" href="${item.FileRef}">${item.Title}</a></span>
           </li>
       </ul>`;
       }
