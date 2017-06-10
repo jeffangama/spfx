@@ -1,6 +1,5 @@
+This is a dev version with different example of using SPFX / React / Rest API for Office 365 (SharePoint)
 https://jeffangama.wordpress.com
-
-### Learning
 
 ### REST
 Use Post Man for rest calls, Use Post man interceptor
@@ -67,4 +66,23 @@ html
 
     const listContainer: Element = this.domElement.querySelector('#spListContainer');
     listContainer.innerHTML = html;
+  }
+
+
+  ### LEARNING
+
+  Error : The promise is any, the header shall be metadata
+
+  private _getHappenings(): Promise<any>{
+    let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
+
+    return this.context.spHttpClient.get(url,
+      SPHttpClient.configurations.v1,
+      {
+        headers: {
+          'Accept': 'application/json;odata=verbose'
+        }
+      }).then((response: SPHttpClientResponse) => {
+        return response.json();
+      });
   }
