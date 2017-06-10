@@ -1,6 +1,24 @@
 This is a dev version with different example of using SPFX / React / Rest API for Office 365 (SharePoint)
 https://jeffangama.wordpress.com
 
+### How to use
+
+Call the function to test different implementation, by commenting the function.
+
+Example :
+
+      //this._testRest(); //Show every list in the site
+      //this._testReact(); //Show some react component
+      this._testHappening(); //Show every pages in pages library. Create a page library first
+
+or 
+
+Example :
+
+      //this._testRest();
+      this._testReact();
+      //this._testHappening();
+
 ### REST
 Use Post Man for rest calls, Use Post man interceptor
 
