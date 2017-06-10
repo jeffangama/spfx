@@ -19,7 +19,7 @@ Example :
       this._testReact();
       //this._testHappening();
 
-### REST
+### How to test REST api
 Use Post Man for rest calls, Use Post man interceptor
 
 Add header :
@@ -29,7 +29,7 @@ application/json;odata=verbose
 
 Check the rest result how it looks to define the model
 
-### Model
+### _testHappening() - Get Pages from page library - Model explanation
 
 To get list items from a list, the rest endpoint returns an array value[] composed of the medatada.
 So respectively we create two object ISPLists value: ISPList[], ISPList represents the medata
@@ -41,7 +41,7 @@ export interface ISPList {
   Title: string;
 }
 
-### QUERY
+### _testHappening() - Get Pages from page library - Query Explanation
 
 private _getHappenings(): Promise<ISPLists> {
     let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
@@ -53,7 +53,7 @@ private _getHappenings(): Promise<ISPLists> {
       });
   }
 
-### RENDERING
+### _testHappening() - Get Pages from page library - RENDERING explanation
 
 ...
 html
