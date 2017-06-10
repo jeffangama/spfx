@@ -25,6 +25,10 @@ export interface IUserProfile {
   FirstName: string;
 }
 
+export interface IHappenings {
+  Title: string;
+}
+
 import {
   SPHttpClient,
   SPHttpClientResponse,
@@ -37,6 +41,13 @@ import HelloWorldReact from './components/HelloWorldReact';
 import { IHelloWorldReactProps } from './IHelloWorldWebPartProps';
 import { BreadcrumbBasicExample } from "./components/BreadCrumb";
 import MainApp from "./components/MainApp";
+
+export interface ISPLists {
+  value: ISPList[];
+}
+export interface ISPList {
+  Title: string;
+}
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
@@ -52,8 +63,9 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     setTimeout(() => {
       this.context.statusRenderer.clearLoadingIndicator(this.domElement);
 
-      this._testRest();
-      this._testReact();
+      //this._testRest();
+      //this._testReact();
+      this._testHappening();
 
       this._logTest();
     }
@@ -99,11 +111,41 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     //   {
     //   }
     // );
-    
+
     //ReactDom.render(element, document.getElementById('react1'));
 
   }
 
+  private _testHappening(): void {
+    var boolTitle = "default";
+
+    this.domElement.innerHTML = `
+      <div class="${styles.helloWorld}">
+        <div class="${styles.container}">
+          <div class="ms-Grid-row ms-bgColor-themeDark ms-fontColor-white ${styles.row}">
+            <div class="ms-Grid-col ms-u-lg10 ms-u-xl8 ms-u-xlPush2 ms-u-lgPush1">
+              <span class="ms-font-xl ms-fontColor-white">Welcome to SharePoint!</span>
+              <p class="ms-font-l ms-fontColor-white">Customize SharePoint experiences using Web Parts.</p>
+              <p class="ms-font-l ms-fontColor-white">${escape(this.properties.description)}</p>
+              <p class="ms-font-l ms-fontColor-white">Loading from ${escape(this.context.pageContext.web.title)}</p>
+              <p class="ms-font-l ms-fontColor-white">Loading from ${boolTitle}</p>
+              <a href="https://aka.ms/spfx" class="${styles.button}">
+                <span class="${styles.label}">Learn more</span>
+              </a>
+            </div>
+          </div>
+        </div>  
+        <div id="spListContainer" />
+        <div id="react1" />
+        <div id="react2" />
+      </div>`;
+    
+    this._getHappenings()
+      .then((response) => {
+        this._renderHappenings(response.value);
+      });
+  }
+  
   private _logTest(): void {
     Log.info('HelloWorld', 'message', this.context.serviceScope);
     Log.warn('HelloWorld', 'WARNING message', this.context.serviceScope);
@@ -134,87 +176,117 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       });
   }
 
-  private _renderListAsync(): void {
-    // Local environment
-    if (Environment.type === EnvironmentType.Local) {
-      this._getMockListData().then((response) => {
-        this._renderUserProfiles(response.value);
-      });
-    }
-    else if (Environment.type == EnvironmentType.SharePoint ||
-      Environment.type == EnvironmentType.ClassicSharePoint) {
+  private _getHappenings(): Promise<ISPLists> {
+    let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
 
-      this._getUserProfiles()
-        .then((response) => {
-          this._renderUserProfiles(response.d.results);
-        });
-    }
+    return this.context.spHttpClient.get(url, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+     
+        return response.json();
+      });
   }
 
+
+  private _renderListAsync(): void {
+  // Local environment
+  if(Environment.type === EnvironmentType.Local) {
+    this._getMockListData().then((response) => {
+      this._renderUserProfiles(response.value);
+    });
+  }
+    else if (Environment.type == EnvironmentType.SharePoint ||
+    Environment.type == EnvironmentType.ClassicSharePoint) {
+
+    this._getUserProfiles()
+      .then((response) => {
+        this._renderUserProfiles(response.d.results);
+      });
+  }
+}
+
   private _renderUserProfiles(items: IUserProfile[]) { //items: IUserProfile[]) {
-    let html: string = '';
-    items.forEach((item: IUserProfile) => {
-      if (item.FirstName != null) {
-        html += `
+  let html: string = '';
+  items.forEach((item: IUserProfile) => {
+    if (item.FirstName != null) {
+      html += `
         <ul class="${styles.list}">
             <li class="${styles.listItem}">
                 <span class="ms-font-l">${item.FirstName}</span>
             </li>
         </ul>`;
-      }
-    });
-    //test comment
+    }
+  });
+  //test comment
 
-    const listContainer: Element = this.domElement.querySelector('#spListContainer');
-    listContainer.innerHTML = html;
-  }
+  const listContainer: Element = this.domElement.querySelector('#spListContainer');
+  listContainer.innerHTML = html;
+}
 
+  private _renderHappenings(items: ISPList[]) { //items: IUserProfile[]) {
+  let html: string = '';
+  items.forEach((item: ISPList) => {
+
+    Log.info('HelloWorld', item.Title, this.context.serviceScope);
+    if (item.Title != null) {
+      html += `
+      <ul class="${styles.list}">
+          <li class="${styles.listItem}">
+              <span class="ms-font-l">${item.Title}</span>
+          </li>
+      </ul>`;
+    }
+  });
+  //test comment
+
+  const listContainer: Element = this.domElement.querySelector('#spListContainer');
+  listContainer.innerHTML = html;
+}
 
   protected get dataVersion(): Version {
-    return Version.parse('1.0');
-  }
+  return Version.parse('1.0');
+}
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
-    return {
-      pages: [
-        {
-          header: {
-            description: strings.PropertyPaneDescription
-          },
-          groups: [
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('description', {
-                  label: 'Description'
-                }),
-                PropertyPaneTextField('test', {
-                  label: 'Multi-line Text Field',
-                  multiline: true
-                }),
-                PropertyPaneCheckbox('test1', {
-                  text: 'Checkbox'
-                }),
-                PropertyPaneDropdown('test2', {
-                  label: 'Dropdown',
-                  options: [
-                    { key: '1', text: 'One' },
-                    { key: '2', text: 'Two' },
-                    { key: '3', text: 'Three' },
-                    { key: '4', text: 'Four' }
-                  ]
-                }),
-                PropertyPaneToggle('test3', {
-                  label: 'Toggle',
-                  onText: 'On',
-                  offText: 'Off'
-                })
-              ]
-            }
-          ]
-        }
-      ]
-    };
-  }
+  return {
+    pages: [
+      {
+        header: {
+          description: strings.PropertyPaneDescription
+        },
+        groups: [
+          {
+            groupName: strings.BasicGroupName,
+            groupFields: [
+              PropertyPaneTextField('description', {
+                label: 'Description'
+              }),
+              PropertyPaneTextField('test', {
+                label: 'Multi-line Text Field',
+                multiline: true
+              }),
+              PropertyPaneCheckbox('test1', {
+                text: 'Checkbox'
+              }),
+              PropertyPaneDropdown('test2', {
+                label: 'Dropdown',
+                options: [
+                  { key: '1', text: 'One' },
+                  { key: '2', text: 'Two' },
+                  { key: '3', text: 'Three' },
+                  { key: '4', text: 'Four' }
+                ]
+              }),
+              PropertyPaneToggle('test3', {
+                label: 'Toggle',
+                onText: 'On',
+                offText: 'Off'
+              })
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
 
 }

@@ -1,0 +1,3 @@
+https://wphsg.sharepoint.com/sites/WPH/_api/lists/getbytitle('Site%20Pages')/items
+
+https://wphsg.sharepoint.com/sites/WPH/_api/lists/getbytitle('Site Pages')/items
