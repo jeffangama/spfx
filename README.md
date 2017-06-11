@@ -6,19 +6,19 @@ https://jeffangama.wordpress.com
 Call the function to test different implementation, by commenting the function.
 
 Example :
-
+```typescript
       //this._testRest(); //Show every list in the site
       //this._testReact(); //Show some react component
       this._testHappening(); //Show every pages in pages library. Create a page library first
-
+```
 or 
 
 Example :
-
+```typescript
       //this._testRest();
       this._testReact();
       //this._testHappening();
-
+```
 ### How to test REST api
 Use Post Man for rest calls, Use Post man interceptor
 
@@ -33,14 +33,14 @@ Check the rest result how it looks to define the model
 
 To get list items from a list, the rest endpoint returns an array value[] composed of the medatada.
 So respectively we create two object ISPLists value: ISPList[], ISPList represents the medata
-
+```typescript
 export interface ISPLists {
   value: ISPList[];
 }
 export interface ISPList {
   Title: string;
 }
-
+```
 ### _testHappening() - Get Pages from page library - Query Explanation
 ```typescript
 private _getHappenings(): Promise<ISPLists> {
