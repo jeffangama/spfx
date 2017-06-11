@@ -42,7 +42,7 @@ export interface ISPList {
 }
 
 ### _testHappening() - Get Pages from page library - Query Explanation
-
+```typescript
 private _getHappenings(): Promise<ISPLists> {
     let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
 
@@ -52,20 +52,20 @@ private _getHappenings(): Promise<ISPLists> {
         return response.json();
       });
   }
-
+```
 ### _testHappening() - Get Pages from page library - RENDERING explanation
 
 ...
 html
 ...
-
+```typescript
  this._getHappenings()
       .then((response) => {
         this._renderHappenings(response.value);
       });
+```
 
-
-
+```typescript
  private _renderHappenings(items: ISPList[]) { //items: IUserProfile[]) {
     let html: string = '';
     items.forEach((item: ISPList) => {
@@ -85,12 +85,12 @@ html
     const listContainer: Element = this.domElement.querySelector('#spListContainer');
     listContainer.innerHTML = html;
   }
-
+```
 
   ### LEARNING
 
   Error : The promise is any, the header shall be metadata
-
+```typescript
   private _getHappenings(): Promise<any>{
     let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
 
@@ -104,3 +104,4 @@ html
         return response.json();
       });
   }
+  ```

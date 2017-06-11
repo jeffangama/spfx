@@ -11,9 +11,13 @@ Headers:
 
 /_api/SP.UserProfiles.PeopleManager/GetPropertiesFor(accountName=@v)?@v='i:0%23.f|membership|xx@siteurl.onmicrosoft.com'
 
+REST REFERENCE
+    Test query in postman :
+        pre requisite : https://www.helloitsliam.com/2016/02/04/postman-and-office-365/
+        Paste the url : https://wphsg.sharepoint.com/sites/Developpersite/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true
+        Add header  : 
+            accept   ,   application/json;odata=verbose
 
-Test query in postman :
-    pre requisite : https://www.helloitsliam.com/2016/02/04/postman-and-office-365/
-    Paste the url : https://wphsg.sharepoint.com/sites/Developpersite/_vti_bin/ListData.svc/UserInformationList?$filter=substringof('Person',ContentType) eq true
-    Add header  : 
-        accept   ,   application/json;odata=verbose
+    Get List items from library with title and link
+        https://wphsg.sharepoint.com/sites/WPH/_api/lists/getbytitle('Pages')/items?$top=3$select=Id,Title,FileRef
+        application/json;odata=nometadata
