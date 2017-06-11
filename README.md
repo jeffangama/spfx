@@ -34,16 +34,16 @@ Check the rest result how it looks to define the model
 To get list items from a list, the rest endpoint returns an array value[] composed of the medatada.
 So respectively we create two object ISPLists value: ISPList[], ISPList represents the medata
 ```typescript
-export interface ISPLists {
-  value: ISPList[];
+export interface ISPListItems {
+  value: ISPListItem[];
 }
-export interface ISPList {
+export interface ISPListItem {
   Title: string;
 }
 ```
 ### _testHappening() - Get Pages from page library - Query Explanation
 ```typescript
-private _getHappenings(): Promise<ISPLists> {
+private _getHappenings(): Promise<ISPListItems> {
     let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;
 
     return this.context.spHttpClient.get(url, SPHttpClient.configurations.v1)
@@ -66,9 +66,9 @@ html
 ```
 
 ```typescript
- private _renderHappenings(items: ISPList[]) { //items: IUserProfile[]) {
+ private _renderHappenings(items: ISPListItems[]) { //items: IUserProfile[]) {
     let html: string = '';
-    items.forEach((item: ISPList) => {
+    items.forEach((item: ISPListItem) => {
 
       Log.info('HelloWorld', item.Title, this.context.serviceScope);
       if (item.Title != null) {
@@ -89,7 +89,7 @@ html
 
   ### LEARNING
 
-  Error : The promise is any, the header shall be metadata
+  Error : The promise is type Any, shall be an array ISPList[], the header shall be metadata instead of verbose
 ```typescript
   private _getHappenings(): Promise<any>{
     let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items`;

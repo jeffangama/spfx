@@ -42,10 +42,10 @@ import { IHelloWorldReactProps } from './IHelloWorldWebPartProps';
 import { BreadcrumbBasicExample } from "./components/BreadCrumb";
 import MainApp from "./components/MainApp";
 
-export interface ISPLists {
-  value: ISPList[];
+export interface ISPListItems {
+  value: ISPListItem[];
 }
-export interface ISPList {
+export interface ISPListItem {
   Title: string;
   FileRef: string;
 }
@@ -177,7 +177,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       });
   }
 
-  private _getHappenings(): Promise<ISPLists> {
+  private _getHappenings(): Promise<ISPListItems> {
     let url = this.context.pageContext.web.absoluteUrl + `/_api/lists/getbytitle('Pages')/items?$top=3&$select=Id,Title,FileRef`;
 
     return this.context.spHttpClient.get(url, SPHttpClient.configurations.v1)
@@ -222,9 +222,9 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     listContainer.innerHTML = html;
   }
 
-  private _renderHappenings(items: ISPList[]) { //items: IUserProfile[]) {
+  private _renderHappenings(items: ISPListItem[]) { //items: IUserProfile[]) {
     let html: string = '';
-    items.forEach((item: ISPList) => {
+    items.forEach((item: ISPListItem) => {
 
       Log.info('HelloWorld', item.Title, this.context.serviceScope);
       if (item.Title != null) {
